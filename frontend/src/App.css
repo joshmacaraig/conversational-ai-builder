@@ -1,0 +1,285 @@
+/* 🎨 Modern Web3 Styles - Premium Design System */
+
+/* 🌌 Glassmorphism Effects */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 📱 Mobile-First Responsive Design */
+@media (max-width: 768px) {
+  .chat-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .chat-bubble {
+    max-width: 85%;
+    font-size: 0.9rem;
+  }
+}
+
+/* 📱 Mobile Safe Area Support */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 🎙️ Voice Chat Specific Styles */
+.voice-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.voice-button:hover::before {
+  opacity: 0.1;
+}
+
+.voice-button.listening::before {
+  opacity: 0.2;
+  animation: spin 2s linear infinite;
+}
+
+/* 📱 Touch-Friendly Button Sizes */
+@media (max-width: 640px) {
+  .btn-primary {
+    padding: 14px 20px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .input-field {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+  
+  .chat-bubble {
+    max-width: 90%;
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+  
+  .voice-button {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-container {
+    padding: 0.5rem;
+  }
+  
+  .chat-bubble {
+    max-width: 95%;
+    font-size: 14px;
+  }
+}
+
+/* 🌐 Modern Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes livePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* 🌈 Gradient Animations */
+.gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* 🔍 Accessibility Improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles for keyboard navigation */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.input-field:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 🎆 Premium Button Styles */
+.btn-neural {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 16px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-neural::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-neural:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-neural:hover::before {
+  opacity: 1;
+}
+
+.btn-neural:active {
+  transform: translateY(0);
+}
+
+/* 💬 Message Bubbles */
+.message-bubble {
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message-bubble:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* 🌊 Loading States */
+.neural-loader {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 🌌 Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* 🌈 Selection Styling */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+::-moz-selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+}
