@@ -7,49 +7,30 @@ dotenv.config();
 
 // Now import other modules that depend on environment variables
 import express from 'express';
-// REMOVED: import cors from 'cors'; - Railway overrides this, using manual approach
+import cors from 'cors';
 import chatRoutes from './routes/chat.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 🚨 RAILWAY CORS OVERRIDE FIX - Remove CORS middleware entirely
-// Railway is injecting its own CORS headers, so we'll handle this manually in each route
+// 🛡️ CORS Configuration - Using environment variable
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+].filter(Boolean); // Remove any undefined values
 
-// Debug info only
-console.log('🔧 CORS Debug Info:');
+console.log('🔧 CORS Configuration:');
 console.log('Environment:', process.env.NODE_ENV);
-console.log('Frontend URL from env:', process.env.FRONTEND_URL);
-console.log('🚨 WARNING: Railway is overriding CORS - using manual approach');
+console.log('Frontend URL:', process.env.FRONTEND_URL);
+console.log('Allowed origins:', allowedOrigins);
 
-// REMOVED: app.use(cors(...)) - Railway overrides this
-
-// Manual CORS handler for ALL requests
-app.use((req, res, next) => {
-  console.log('🌐 Request from:', req.get('Origin') || 'No origin');
-  console.log('🛠️ Setting manual CORS headers...');
-  
-  // Force set CORS headers - Railway should not override these if set this way
-  res.setHeader('Access-Control-Allow-Origin', 'https://my-conversaai.vercel.app');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
-  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
-  
-  // Handle preflight OPTIONS requests
-  if (req.method === 'OPTIONS') {
-    console.log('✈️ Handling preflight OPTIONS request for:', req.path);
-    console.log('📤 Preflight headers set:', {
-      origin: res.getHeader('Access-Control-Allow-Origin'),
-      methods: res.getHeader('Access-Control-Allow-Methods'),
-      headers: res.getHeader('Access-Control-Allow-Headers')
-    });
-    return res.status(204).end();
-  }
-  
-  console.log('✅ CORS headers manually set for:', req.method, req.path);
-  next();
-});
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+}));
 
 // 📦 Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

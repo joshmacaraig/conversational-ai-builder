@@ -1,8 +1,11 @@
-// 🌐 API Service - Frontend integration with backend
+// 🌐 API Service - Frontend integration with Vercel proxy routes
 // Professional HTTP client with error handling
+// Updated to use Vercel API routes that proxy to Railway backend
 
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api';
+
+// Use Vercel API routes instead of Railway directly to bypass CORS
+const API_BASE_URL = ''; // Empty because we're using same origin (Vercel)
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
@@ -38,7 +41,7 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * Chat Service - Handles all conversational AI interactions
+ * Chat Service - Handles all conversational AI interactions via Vercel proxy
  */
 export const chatService = {
   /**
@@ -82,15 +85,10 @@ export const chatService = {
       const audioBlob = new Blob([response.data], { type: 'audio/mpeg' });
       const audioUrl = URL.createObjectURL(audioBlob);
       
-      // Extract metadata from headers
-      const audioInfo = response.headers['x-audio-info'] ? 
-        JSON.parse(response.headers['x-audio-info']) : {};
-      
       return {
         success: true,
         audioUrl,
-        audioBlob,
-        metadata: audioInfo
+        audioBlob
       };
     } catch (error) {
       return {
@@ -102,49 +100,11 @@ export const chatService = {
   },
 
   /**
-   * 🧪 Test API connection
-   */
-  async testConnection() {
-    try {
-      const response = await apiClient.get('/api/test');
-      return {
-        success: true,
-        data: response.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: this.handleError(error),
-        status: error.response?.status
-      };
-    }
-  },
-
-  /**
-   * 📊 Get API status
-   */
-  async getStatus() {
-    try {
-      const response = await apiClient.get('/api/status');
-      return {
-        success: true,
-        data: response.data
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: this.handleError(error),
-        status: error.response?.status
-      };
-    }
-  },
-
-  /**
-   * 🏥 Check API health
+   * 🏥 Check API health via Vercel proxy
    */
   async checkHealth() {
     try {
-      const response = await apiClient.get('/health');
+      const response = await apiClient.get('/api/health');
       return {
         success: true,
         data: response.data
