@@ -13,12 +13,18 @@ import chatRoutes from './routes/chat.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 🛡️ Security & CORS Middleware - Simple version for Railway
+// 🛡️ Security & CORS Middleware - Production ready
+const allowedOrigins = [
+  'https://my-conversaai.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: '*', // Allow all origins for now - we'll fix this after deployment
+  origin: true, // Allow all origins temporarily
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
 
 // 📦 Body parsing middleware
