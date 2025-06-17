@@ -15,13 +15,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "REACT_APP_API_URL": "@api-url"
-  },
-  "functions": {
-    "app/api/**": {
-      "runtime": "@vercel/node"
-    }
-  }
+  ]
 }
