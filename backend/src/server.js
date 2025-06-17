@@ -7,59 +7,47 @@ dotenv.config();
 
 // Now import other modules that depend on environment variables
 import express from 'express';
-import cors from 'cors';
+// REMOVED: import cors from 'cors'; - Railway overrides this, using manual approach
 import chatRoutes from './routes/chat.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 🛡️ Security & CORS Middleware - Production ready with debugging
-const allowedOrigins = [
-  'https://my-conversaai.vercel.app',
-  'http://localhost:5173',
-  'http://localhost:3000'
-];
+// 🚨 RAILWAY CORS OVERRIDE FIX - Remove CORS middleware entirely
+// Railway is injecting its own CORS headers, so we'll handle this manually in each route
 
-// Debug CORS setup
+// Debug info only
 console.log('🔧 CORS Debug Info:');
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Frontend URL from env:', process.env.FRONTEND_URL);
-console.log('Allowed origins:', allowedOrigins);
+console.log('🚨 WARNING: Railway is overriding CORS - using manual approach');
 
-app.use(cors({
-  origin: function (origin, callback) {
-    console.log('🌐 CORS Request from origin:', origin);
-    
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) {
-      console.log('✅ Allowing request with no origin');
-      return callback(null, true);
-    }
-    
-    // Allow all origins for now - we'll restrict later
-    console.log('✅ Allowing origin:', origin);
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
-}));
+// REMOVED: app.use(cors(...)) - Railway overrides this
 
-// Force CORS headers manually (Railway override fix)
+// Manual CORS handler for ALL requests
 app.use((req, res, next) => {
-  // Set CORS headers manually to override any Railway defaults
-  res.header('Access-Control-Allow-Origin', 'https://my-conversaai.vercel.app');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  console.log('🌐 Request from:', req.get('Origin') || 'No origin');
+  console.log('🛠️ Setting manual CORS headers...');
   
-  // Handle preflight requests
+  // Force set CORS headers - Railway should not override these if set this way
+  res.setHeader('Access-Control-Allow-Origin', 'https://my-conversaai.vercel.app');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight OPTIONS requests
   if (req.method === 'OPTIONS') {
-    console.log('📨 Handling preflight request for:', req.path);
-    return res.status(200).end();
+    console.log('✈️ Handling preflight OPTIONS request for:', req.path);
+    console.log('📤 Preflight headers set:', {
+      origin: res.getHeader('Access-Control-Allow-Origin'),
+      methods: res.getHeader('Access-Control-Allow-Methods'),
+      headers: res.getHeader('Access-Control-Allow-Headers')
+    });
+    return res.status(204).end();
   }
   
-  console.log('📤 Manual CORS headers set for:', req.path);
+  console.log('✅ CORS headers manually set for:', req.method, req.path);
   next();
 });
 
