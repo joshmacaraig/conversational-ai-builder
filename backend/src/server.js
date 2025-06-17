@@ -13,25 +13,9 @@ import chatRoutes from './routes/chat.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 🛡️ Security & CORS Middleware
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:5173',
-  'https://my-conversaai.vercel.app',
-  'https://railway.com'
-].filter(Boolean);
-
+// 🛡️ Security & CORS Middleware - Simple version for Railway
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // Allow all origins for now - we'll fix this after deployment
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -59,22 +43,13 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 🔍 Debug endpoint to check environment variables
+// 🔍 Simple debug endpoint
 app.get('/debug', (req, res) => {
-  res.json({
-    hasApiKey: !!process.env.OPENAI_API_KEY,
-    apiKeyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
-    apiKeyPrefix: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 10) + '...' : 'Not found',
-    port: process.env.PORT,
-    nodeEnv: process.env.NODE_ENV,
+  res.json({ 
+    message: 'Debug endpoint working',
+    timestamp: new Date().toISOString(),
     frontendUrl: process.env.FRONTEND_URL,
-    allowedOrigins: [
-      process.env.FRONTEND_URL,
-      'http://localhost:5173',
-      'https://my-conversaai.vercel.app',
-      'https://railway.com'
-    ].filter(Boolean),
-    allEnvKeys: Object.keys(process.env).filter(key => key.startsWith('OPENAI'))
+    hasApiKey: !!process.env.OPENAI_API_KEY
   });
 });
 
