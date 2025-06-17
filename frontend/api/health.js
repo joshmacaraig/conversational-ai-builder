@@ -21,7 +21,27 @@ export default async function handler(req, res) {
       }
     });
 
-    const data = await response.json();
+    console.log('🔍 Railway response status:', response.status);
+    console.log('🔍 Railway response headers:', Object.fromEntries(response.headers));
+    
+    // Get response text first, then try to parse as JSON
+    const responseText = await response.text();
+    console.log('🔍 Railway response text:', responseText);
+    
+    let data;
+    try {
+      // Try to parse as JSON
+      data = JSON.parse(responseText);
+      console.log('✅ Successfully parsed as JSON');
+    } catch (jsonError) {
+      // If not JSON, create a JSON response from the text
+      console.log('⚠️ Response is not JSON, creating JSON wrapper');
+      data = {
+        status: responseText.trim() || 'OK',
+        message: 'Railway backend responded with plain text',
+        originalResponse: responseText
+      };
+    }
     
     console.log('✅ Railway health check successful:', response.status);
     
@@ -30,11 +50,12 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'GET');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
-    // Return Railway's response to frontend
+    // Return processed response to frontend
     return res.status(response.status).json({
       ...data,
       proxy: 'vercel',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      railwayStatus: response.status
     });
 
   } catch (error) {
