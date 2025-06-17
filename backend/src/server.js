@@ -13,19 +13,55 @@ import chatRoutes from './routes/chat.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 🛡️ Security & CORS Middleware - Production ready
+// 🛡️ Security & CORS Middleware - Production ready with debugging
 const allowedOrigins = [
   'https://my-conversaai.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
 ];
 
+// Debug CORS setup
+console.log('🔧 CORS Debug Info:');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Frontend URL from env:', process.env.FRONTEND_URL);
+console.log('Allowed origins:', allowedOrigins);
+
 app.use(cors({
-  origin: true, // Allow all origins temporarily
+  origin: function (origin, callback) {
+    console.log('🌐 CORS Request from origin:', origin);
+    
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) {
+      console.log('✅ Allowing request with no origin');
+      return callback(null, true);
+    }
+    
+    // Allow all origins for now - we'll restrict later
+    console.log('✅ Allowing origin:', origin);
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 }));
+
+// Force CORS headers manually (Railway override fix)
+app.use((req, res, next) => {
+  // Set CORS headers manually to override any Railway defaults
+  res.header('Access-Control-Allow-Origin', 'https://my-conversaai.vercel.app');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-Requested-With, Accept');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('📨 Handling preflight request for:', req.path);
+    return res.status(200).end();
+  }
+  
+  console.log('📤 Manual CORS headers set for:', req.path);
+  next();
+});
 
 // 📦 Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
