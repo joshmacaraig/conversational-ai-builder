@@ -1,7 +1,7 @@
 // 🎵 Text-to-Speech Proxy - Vercel API Route
 // This proxies TTS requests to Railway backend to bypass CORS issues
 
-const RAILWAY_BACKEND_URL = 'https://conversaai-backend.railway.app';
+const RAILWAY_BACKEND_URL = 'https://conversational-ai-builder-production.up.railway.app';
 
 export default async function handler(req, res) {
   // Only allow POST requests
