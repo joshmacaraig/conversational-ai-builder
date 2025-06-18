@@ -1,7 +1,7 @@
 {
-  "name": "conversational-ai-builder-backend",
+  "name": "usapai-backend",
   "version": "1.0.0",
-  "description": "Backend API for Conversational AI Builder with OpenAI integration",
+  "description": "Backend API for UsapAI with OpenAI integration",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

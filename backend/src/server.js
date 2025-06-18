@@ -1,4 +1,4 @@
-// 🚀 Conversational AI Builder - Backend Server
+// 🚀 UsapAI - Backend Server
 // Professional Express.js server with OpenAI integration
 
 // Load environment variables FIRST before any other imports
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    service: 'Conversational AI Builder API',
+    service: 'UsapAI API',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development'
@@ -95,7 +95,7 @@ app.use('*', (req, res) => {
 // 🚀 Start server
 app.listen(PORT, () => {
   console.log(`
-🎉 Conversational AI Builder Backend Started!
+🎉 UsapAI Backend Started!
 📡 Server: http://localhost:${PORT}
 🏥 Health: http://localhost:${PORT}/health
 🎯 Frontend CORS: ${process.env.FRONTEND_URL || 'http://localhost:5173'}
